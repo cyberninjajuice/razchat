@@ -1,5 +1,5 @@
-var fs=require("fs"), net=require("net"),Mustache=require("Mustache"),chalk=require("chalk");
-
+var fs=require("fs"), net=require("net"),chalk=require("chalk");
+//Mustache=require("Mustache")
 var Question=function(){
 //get random numbers to add/multiply/subtract
 	this.num= parseInt((Math.floor(Math.random()*10)), 10);
