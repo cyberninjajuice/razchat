@@ -84,16 +84,16 @@ var server=net.createServer(function(socket){
 			var text=data.toString().trim();
 			if(text[0]==="/"){
 				if(text==="/mathgame"){
-					mathGame();
+					//mathGame();
+					console.log("math");
 				}
 			}else{
 				for(var i=0;i<users.length;i++){
-				users[i].socket.write(user.name+"|: "+data);
+					users[i].socket.write(user.name+"|: "+data);
 				}
 			} 
 			});
 		});
-
  
 	// process.stdin.on('data', function (chunk) {
  // 	process.stdout.write('data: ' + chunk);
@@ -109,69 +109,70 @@ var server=net.createServer(function(socket){
 	// 		});
 	// 	};
 
-var mathGame= function(){
-	// socket.once("data", function(err, data)){
-	// 	if(err){
-	// 		console.log(data)
-	// 	}
-	socket.on("data", function(data){
-		//make answers behave nicely.
-		var text= data.toString().trim();
-		//console.log(text);		
-		var num=parseInt(text,10);
-		// var mathGame=function(){
-		console.log(num);
-		//console.log("pre anything"+q[counter]);
-		// if(text.toLowerCase().search("math game")!=-1){ 
-			if(text.toLowerCase().search("math game")!=-1){
-				console.log(text);
-				if(eqarray[counter].answerCheck(num)){
-					right1++;
-					socket.write("\nGood Job! "+right1+"/10\n");
-					counter++;
-					//console.log("correct"+counter);
-					socket.write("\n"+q[counter]+"\n");
-					wrong1=0;
-				}else{
-					socket.write("\nSorry that's not correct\n");
-					wrong1++;
-					console.log("wrong  "+wrong1);
-					//Have another try!
-					if(wrong1<2){
-						socket.write("\n"+q[counter]+"\n");
-						//console.log("else if"+counter);
-					} else{
-						socket.write("\nWe'll try the next one\n");
-						counter++;
-						//console.log(q[counter]);
-						socket.write("\n"+q[counter]+"\n");
-						//console.log("elseelse"+counter);
-						wrong1=0;
-					}
-				}
-			}else{
-				socket.write("sorry\n");
-			}
-			// socket.write("\n"+q[counter]+"\n");
-			// }else{
-			// 	socket.write("thank you");
-			// 	//move on to next Question!
-			// }
-		// }else{ 
-		// 	console.log(text);
-		// //}
+// var mathGame= function(){
+// 	// socket.once("data", function(err, data)){
+// 	// 	if(err){
+// 	// 		console.log(data)
+// 	// 	}
+// 		//make answers behave nicely.
+// 		var text= data.toString().trim();
+// 		//console.log(text);		
+// 		var num=parseInt(text,10);
+// 		// var mathGame=function(){
+// 		console.log(num);
+// 		//console.log("pre anything"+q[counter]);
+// 		// if(text.toLowerCase().search("math game")!=-1){ 
+// 			if(text.toLowerCase().search("math game")!=-1){
+// 				console.log(text);
+// 				if(eqarray[counter].answerCheck(num)){
+// 					right1++;
+// 					socket.write("\nGood Job! "+right1+"/10\n");
+// 					counter++;
+// 					//console.log("correct"+counter);
+// 					socket.write("\n"+q[counter]+"\n");
+// 					wrong1=0;
+// 				}else{
+// 					socket.write("\nSorry that's not correct\n");
+// 					wrong1++;
+// 					console.log("wrong  "+wrong1);
+// 					//Have another try!
+// 					if(wrong1<2){
+// 						socket.write("\n"+q[counter]+"\n");
+// 						//console.log("else if"+counter);
+// 					} else{
+// 						socket.write("\nWe'll try the next one\n");
+// 						counter++;
+// 						//console.log(q[counter]);
+// 						socket.write("\n"+q[counter]+"\n");
+// 						//console.log("elseelse"+counter);
+// 						wrong1=0;
+// 					}
+// 				}
+// 			}else{
+// 				socket.write("sorry\n");
+// 			}
+// 			// socket.write("\n"+q[counter]+"\n");
+// 			// }else{
+// 			// 	socket.write("thank you");
+// 			// 	//move on to next Question!
+// 			// }
+// 		// }else{ 
+// 		// 	console.log(text);
+// 		// //}
 
-	});
-	};
-	//mathGame();
+// 	});
+// 	};
 socket.on("end", function(){
 		clientCounter--;
 		console.log("A client has disconnected...");
-		})
+		console.log("ended "+user.name);
+		var i = users.indexOf(user);
+		users.splice(i,1);
+		});
 	});
 server.listen(port, function(){
 	console.log("Listening on Port: "+port);
 	});
-}
+};
 
 setup();
