@@ -1,4 +1,4 @@
-var fs=require("fs"), net=require("net"),chalk=require("chalk");
+var fs=require("fs"), net=require("net")
 //Mustache=require("Mustache")
 var Question=function(){
 //get random numbers to add/multiply/subtract
