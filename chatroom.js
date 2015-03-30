@@ -1,4 +1,4 @@
-var fs=require("fs"), net=require("net")
+var fs=require("fs"), net=require("net");
 //Mustache=require("Mustache")
 var Question=function(){
 //get random numbers to add/multiply/subtract
@@ -42,30 +42,39 @@ var q=[];
 for(var i=0;i<eqarray.length;i++){	
 	q.push(eqarray[i].equation.toString());
 }
-var mathQ=0;
 //How many are wrong?
-var wrong1=0;
 //How many are correct?
-var right1=0;
-var counter=0;
-var port=3000;
+var right1=0, counter=0, wrong1=0, mathQ=0, port=3000;
 
+//Where is history saved?
+var history=[];
+var hf="chathistory.json";
 var User=function(socket){
 	this.socket=socket;
 	this.name="person";
 	console.log(this.name);
-	this.getName=function(){
-	socket.once("data", function(data){
-		var nameD=data.toString().trim();
-		
-		users[clientCounter].name=nameD;
-		console.log("1st ever "+users[0].name);
-		if(users[1]!==undefined){
-			console.log("2nd ever "+users[1].name);
-		}
-	});
-	}
+
 };
+
+var getHist=function(){
+	fs.readFile(hf, function(err,data){
+		if(err){
+			console.log("creating history file.");
+		} else{
+			history= JSON.parse(data);
+			console.log(history);
+		}
+		});
+};
+getHist();
+var addHist=function(){
+	fs.writeFile(hf, JSON.stringify(history),function(err){
+		if(err){
+			console.log("There is the following error: err");
+		}
+		});
+};
+setInterval(addHist,100000);
 
 var users=[], clientCounter=-1;
 var setup=function(){
@@ -77,37 +86,31 @@ var server=net.createServer(function(socket){
 	console.log("Client, "+clientCounter+", has connected.");
 	socket.write("Welcome, you are connector Number: "+clientCounter+"\n"+"At any time, type /commands to learn what you can do.\nFor now: Please select a Username whatever you type will be your user name!\n");
 	console.log(users[clientCounter].name)
-	socket.once("data",function(data){
+	socket.once("data", function(data){
 		var namedata=data.toString().trim();
 		user.name=namedata;
+		user.socket.write("welcome: "+user.name+"! Thank you for joining!\n");
+		user.socket.write(history.toString());
 		socket.on("data",function(data){
 			var text=data.toString().trim();
+			var sayAll=function(){
+				var speech=user.name+">: "+text+"\n";
+				history.push(speech);
+				for(var i=0;i<users.length;i++){
+					users[i].socket.write(speech);
+				}
+			}
+
 			if(text[0]==="/"){
 				if(text==="/mathgame"){
 					//mathGame();
 					console.log("math");
 				}
 			}else{
-				for(var i=0;i<users.length;i++){
-					users[i].socket.write(user.name+"|: "+data);
-				}
-			} 
-			});
+				sayAll();
+			}
+			}); 
 		});
- 
-	// process.stdin.on('data', function (chunk) {
- // 	process.stdout.write('data: ' + chunk);
-	// });
-	// var sayAll=function(){
-	// 		users[clientCounter].socket.on("data",function(data){
-	// 			var text=data.toString().trim();
-	// 			console.log(text);
-	// 			var origin=users[clientCounter].name;
-	// 			for (var x=0; x<users.length;x++){
-	// 				users[x].socket.write(origin+": "+text+"\n");
-	// 			}
-	// 		});
-	// 	};
 
 // var mathGame= function(){
 // 	// socket.once("data", function(err, data)){
